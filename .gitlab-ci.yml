@@ -1,0 +1,18 @@
+stages:        
+  - deploy
+
+deploy-job:      
+  stage: deploy  
+  before_script:
+    - mkdir -p ~/.kube
+    - echo ${KUBE_CONFIG} | base64 -d > ~/.kube/config
+    - chmod 700 ~/.kube/config
+  image:
+    name: alpine/k8s:1.25.2
+    entrypoint: ["/bin/sh", "-c"]
+  script:
+    - for bucket in $(cat ceph-cleans3mp/bucketlist); do cat ceph-cleans3mp/kubernetes-cronjobs/cron_template | sed "s/bucket_name/$bucket/g; s/\"X 0/\"$(shuf -i 0-59 -n 1) 0/" > ceph-cleans3mp/kubernetes-cronjobs/cronjob-${bucket}.yaml; done
+    - for f in ceph-cleans3mp/kubernetes-cronjobs/*.yaml; do kubectl apply -f $f; done
+  only:
+    changes:
+      - ceph-cleans3mp/bucketlist
