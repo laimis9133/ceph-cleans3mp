@@ -9,7 +9,7 @@ if len(sys.argv) != 3:
 ceph_bucket = sys.argv[1]
 days = int(sys.argv[2])
 
-# Setup Ceph S3 client. Use bucket names as profile names - check credentials file generation in get-keys.sh
+# Setup Ceph S3 client. Use bucket names as profile names - check credentials file generation in get-bucket-keys.sh
 ceph_s3_client = boto3.Session(profile_name=ceph_bucket).client('s3')
 response = ceph_s3_client.list_multipart_uploads(
     Bucket=ceph_bucket
