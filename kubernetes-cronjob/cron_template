@@ -1,0 +1,22 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: cleanup-s3mp-bucket_name
+  namespace: your_namespace
+spec:
+  schedule: "X 0 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: cleanup-s3mp-bucket_name
+            image: path/to/your/image/registry/cleanup-s3-multipart-uploads:latest
+            env:
+            - name: ceph_bucket
+              value: "bucket_name"
+            - name: days
+              value: "10"
+          restartPolicy: Never
+          imagePullSecrets:
+          - name: registry-access-k8s-secret
