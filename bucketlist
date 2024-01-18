@@ -1,0 +1,5 @@
+bucket1
+bucket2
+bucket3
+
+Generate a full bucket list using radosgw-admin with get-bucket-keys.sh 
