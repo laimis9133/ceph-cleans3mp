@@ -11,8 +11,8 @@ deploy-job:
     name: alpine/k8s:1.25.2
     entrypoint: ["/bin/sh", "-c"]
   script:
-    - for bucket in $(cat ceph-cleans3mp/bucketlist); do cat ceph-cleans3mp/kubernetes-cronjob/cron_template | sed "s/bucket_name/$bucket/g; s/\"X 0/\"$(shuf -i 0-59 -n 1) 0/" > ceph-cleans3mp/kubernetes-cronjob/cronjob-${bucket}.yaml; done
-    - for f in ceph-cleans3mp/kubernetes-cronjob/*.yaml; do kubectl apply -f $f; done
+    - for bucket in $(cat bucketlist); do cat kubernetes-cronjob/cron_template | sed "s/bucket_name/$bucket/g; s/\"X 0/\"$(shuf -i 0-59 -n 1) 0/" > kubernetes-cronjob/cronjob-${bucket}.yaml; done
+    - for f in kubernetes-cronjob/*.yaml; do kubectl apply -f $f; done
   only:
     changes:
       - ceph-cleans3mp/bucketlist
